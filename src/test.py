@@ -1,5 +1,4 @@
 from random import randint, shuffle
-from os import system
 
 cards = [
     "A♠", "A♠", "A♥", "A♣",
@@ -33,20 +32,17 @@ cardvalues = {
     "K♠":10, "K♦":10, "K♥":10, "K♣":10
 }
 
-
 def shufflecards():
     global cards
     shuffle(cards)
 
 def deal():
-    global dealerhand, userhand, counter, total, dealertotal, bust
+    global dealerhand, userhand, counter, total, dealertotal
     userhand = []
     dealerhand = []
     counter = 0
     total = 0
-    bust = False
     dealertotal = 0
-
     for _ in range(2):
         dealerhand.append(cards[counter])
         dealertotal += cardvalues[cards[counter]]
@@ -56,80 +52,24 @@ def deal():
         counter += 1
 
 def hit():
-    global bust, counter, total
-    userhand.append(cards[counter])
+    userhand.append(cardvalues[cards[counter]])
     total += cardvalues[cards[counter]]
     counter += 1
-    for _ in userhand:
-        if 'A' in _ and total > 21:
-            total -= 10
+
+def bust():
     if total > 21:
-        bust = True
+        return True
 
 def blackjack():
     if len(userhand) == 2 and total == 21:
         return True
 
-def wlt():
-    system("clear")
-    for _ in dealerhand:
-        print(_, end=" ")
-    print(f" |  Total: {dealertotal}", end=" ")
-    print("\n")
-    for _ in userhand:
-        print(_, end=" ")
-    print(f" |  Total: {total}", end=" ")
-    print("\n")
-
-    if dealertotal > total:
-        print("You lose...")
-    elif total > dealertotal:
-        print("You Win!")
-    elif total == dealertotal:
-        print("Tie!")
-
-def AI():
-    pass
-
-shufflecards()
-deal()
-
 while True:
+    shufflecards()
+    deal()
+
+    print(dealerhand, " ", dealertotal, "\n", userhand, " ", total)
+
     if blackjack():
-        system('clear')
-        for _ in dealerhand:
-            print(_, end=" ")
-        print(f" |  Total: {dealertotal}", end=" ")
-        print("\n")
-        for _ in userhand:
-            print(_, end=" ")
-        print(f" |  Total: {total}", end=" ")
-        print("Blackjack!\nYou Win.")
-        break
-
-    system('clear')
-    print(dealerhand[0], "[]", end=" ")
-    print("\n")
-    for _ in userhand:
-        print(_, end=" ")
-    print(f" |  Total: {total}", end=" ")
-    print("\n")
-    H_S = input("Hit[H] or Stand[S]: ")
-
-    if H_S == "H" or H_S == "h":
-        hit()
-    elif H_S == "S" or H_S == "s":
-        wlt()
-        break
-    
-    if bust:
-        system('clear')
-        for _ in dealerhand:
-            print(_, end=" ")
-        print(f" |  Total: {dealertotal}", end=" ")
-        print("\n")
-        for _ in userhand:
-            print(_, end=" ")
-        print(f" |  Total: {total}", end=" ")
-        print("You Bust!\nYou Lose...")
+        print("Blackjack")
         break
